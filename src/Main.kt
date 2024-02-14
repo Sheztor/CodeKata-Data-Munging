@@ -4,6 +4,7 @@ fun main() {
     val file = File("./src/weather.dat")
 
     val listOfLines = file.readLines()
+    val listTempDifferences = mutableListOf<Pair <Int, Int>>()
 
     for(line in listOfLines){
         val lineTrim = line.trim()
@@ -11,19 +12,21 @@ fun main() {
         if(lineTrim.startsWith("Dy") || lineTrim == "") continue
 
         val valuesLine = lineTrim.split("\\s+".toRegex())
-        
+
         if(valuesLine[0].toIntOrNull() == null) continue
 
         val day = valuesLine[0]
         val maxTemp = valuesLine[1].filter { it.isDigit() }.toInt()
         val minTemp = valuesLine[2].filter { it.isDigit() }.toInt()
 
-        println("Day: $day \nMax: $maxTemp \nMin: $minTemp \n")
+        val valueDifference = maxTemp - minTemp
 
-        spread(maxTemp, minTemp)
+        listTempDifferences.add(Pair(day.toInt(), valueDifference))
+
     }
-}
 
-fun spread(maxTemp: Int, minTemp: Int){
+    val result = listTempDifferences.minBy { it.second }
+
+    println("Number Day: ${result.first} \nMinor Difference : ${result.second}")
 
 }
